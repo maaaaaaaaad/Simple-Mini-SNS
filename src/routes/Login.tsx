@@ -7,6 +7,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [newAccount, setAccount] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
 
   const onChange: React.ChangeEventHandler<HTMLElement> = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -24,16 +25,23 @@ const Login: React.FC = () => {
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-
-    if (newAccount) {
-      // Create Account
-      const createData = await authService.createAccount(email, password);
-      await console.log(createData);
-    } else {
-      // Login
-      const loginData = await authService.signInWithAccount(email, password);
-      await console.log(loginData);
+    try {
+      if (newAccount) {
+        // Create Account
+        const createData = await authService.createAccount(email, password);
+        await console.log(createData);
+      } else {
+        // Login
+        const loginData = await authService.signInWithAccount(email, password);
+        await console.log(loginData);
+      }
+    } catch (error: any | unknown) {
+      setError(error.message);
     }
+  };
+
+  const toggleAccount = () => {
+    setAccount((prev) => !prev);
   };
 
   return (
@@ -63,7 +71,11 @@ const Login: React.FC = () => {
           type="submit"
           value={newAccount ? "Create Account" : "SIGN IN"}
         />
+        <span onClick={toggleAccount} className="form__toggle">
+          {newAccount ? "SIGN IN" : "Create Account"}
+        </span>
       </form>
+      <div className="error">{error}</div>
       <div className="btn">
         <button className="btn__google">Continue Google</button>
         <button className="btn__github">Continue Github</button>
