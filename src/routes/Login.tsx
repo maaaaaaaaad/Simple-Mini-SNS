@@ -40,6 +40,16 @@ const Login: React.FC = () => {
     }
   };
 
+  const signIn: React.MouseEventHandler<HTMLButtonElement> = async (
+    event: React.MouseEvent<HTMLElement>
+  ) => {
+    const target = event.currentTarget.textContent as string;
+
+    const onLogin = await authService.diffLogin(target);
+
+    await console.log(onLogin);
+  };
+
   const toggleAccount = () => {
     setAccount((prev) => !prev);
   };
@@ -77,8 +87,12 @@ const Login: React.FC = () => {
       </form>
       <div className="error">{error}</div>
       <div className="btn">
-        <button className="btn__google">Continue Google</button>
-        <button className="btn__github">Continue Github</button>
+        <button onClick={signIn} className="btn__google">
+          Continue Google
+        </button>
+        <button onClick={signIn} className="btn__github">
+          Continue Github
+        </button>
       </div>
     </>
   );
