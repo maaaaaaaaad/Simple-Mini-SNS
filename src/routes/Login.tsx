@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import AuthServcie from "../service/authService";
+
+const authService = new AuthServcie();
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -19,12 +22,17 @@ const Login: React.FC = () => {
     }
   };
 
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
+
     if (newAccount) {
       // Create Account
+      const createData = await authService.createAccount(email, password);
+      await console.log(createData);
     } else {
       // Login
+      const loginData = await authService.signInWithAccount(email, password);
+      await console.log(loginData);
     }
   };
 
