@@ -12,6 +12,10 @@ class AuthServcie {
   onStateChanged(userState: Function) {
     return firebaseApp.auth().onAuthStateChanged((user) => userState(user));
   }
+
+  logout() {
+    firebaseApp.auth().signOut();
+  }
 }
 
 export default AuthServcie;
