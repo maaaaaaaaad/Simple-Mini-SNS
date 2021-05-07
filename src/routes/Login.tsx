@@ -44,10 +44,7 @@ const Login: React.FC = () => {
     event: React.MouseEvent<HTMLElement>
   ) => {
     const target = event.currentTarget.textContent as string;
-
-    const onLogin = await authService.diffLogin(target);
-
-    await console.log(onLogin);
+    await authService.diffLogin(target);
   };
 
   const toggleAccount = () => {
