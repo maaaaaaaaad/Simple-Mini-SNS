@@ -35,7 +35,7 @@ const Login: React.FC = () => {
         const loginData = await authService.signInWithAccount(email, password);
         await console.log(loginData);
       }
-    } catch (error: any | unknown) {
+    } catch (error) {
       setError(error.message);
     }
   };
