@@ -24,7 +24,10 @@ const App: React.FC = () => {
     <>
       {lodingSpanner ? (
         <div className="app">
-          <AppRoutes loginState={loginState}></AppRoutes>
+          <AppRoutes
+            loginState={loginState}
+            authService={authService}
+          ></AppRoutes>
           <footer className="app__footer">
             &copy; Project SNS {new Date().getFullYear()}
           </footer>

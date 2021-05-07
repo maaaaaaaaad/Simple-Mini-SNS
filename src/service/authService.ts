@@ -20,8 +20,8 @@ class AuthServcie {
     return firebaseApp.auth().onAuthStateChanged((user) => userState(user));
   }
 
-  logout() {
-    firebaseApp.auth().signOut();
+  logout(): Promise<void> {
+    return firebaseApp.auth().signOut();
   }
 
   getProvider(providerName: string) {

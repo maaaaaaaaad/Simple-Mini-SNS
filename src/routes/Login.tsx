@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import AuthServcie from "../service/authService";
 
-const authService = new AuthServcie();
+interface Props {
+  authService: AuthServcie;
+}
 
-const Login: React.FC = () => {
+const Login: React.FC<Props> = ({ authService }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [newAccount, setAccount] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+  const [lodingSpanner, setSpanner] = useState<boolean>(false);
 
   const onChange: React.ChangeEventHandler<HTMLElement> = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -32,7 +35,9 @@ const Login: React.FC = () => {
         await console.log(createData);
       } else {
         // Login
+        setSpanner(true);
         const loginData = await authService.signInWithAccount(email, password);
+        setSpanner(false);
         await console.log(loginData);
       }
     } catch (error) {
@@ -44,7 +49,9 @@ const Login: React.FC = () => {
     event: React.MouseEvent<HTMLElement>
   ) => {
     const target = event.currentTarget.textContent as string;
+    setSpanner(true);
     await authService.diffLogin(target);
+    setSpanner(false);
   };
 
   const toggleAccount = () => {
@@ -53,44 +60,51 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <form onSubmit={onSubmit} className="form">
-        <input
-          className="form__email"
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={email}
-          required
-          onChange={onChange}
-        />
-        <input
-          className="form__password"
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={password}
-          required
-          onChange={onChange}
-        />
-        <input
-          className="form__submit"
-          name="submit"
-          type="submit"
-          value={newAccount ? "Create Account" : "SIGN IN"}
-        />
-        <span onClick={toggleAccount} className="form__toggle">
-          {newAccount ? "SIGN IN" : "Create Account"}
-        </span>
-      </form>
+      {!lodingSpanner ? (
+        <>
+          <form onSubmit={onSubmit} className="form">
+            <input
+              className="form__email"
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={email}
+              required
+              onChange={onChange}
+            />
+            <input
+              className="form__password"
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={password}
+              required
+              onChange={onChange}
+            />
+            <input
+              className="form__submit"
+              name="submit"
+              type="submit"
+              value={newAccount ? "Create Account" : "SIGN IN"}
+            />
+            <span onClick={toggleAccount} className="form__toggle">
+              {newAccount ? "SIGN IN" : "Create Account"}
+            </span>
+          </form>
+          <div className="btn">
+            <button onClick={signIn} className="btn__google">
+              Continue Google
+            </button>
+            <button onClick={signIn} className="btn__github">
+              Continue Github
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="lodingSpanner"></div>
+      )}
+
       <div className="error">{error}</div>
-      <div className="btn">
-        <button onClick={signIn} className="btn__google">
-          Continue Google
-        </button>
-        <button onClick={signIn} className="btn__github">
-          Continue Github
-        </button>
-      </div>
     </>
   );
 };

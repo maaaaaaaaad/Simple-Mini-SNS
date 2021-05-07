@@ -3,13 +3,15 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Home from "../routes/Home";
 import Login from "../routes/Login";
 import Profile from "../routes/Profile";
+import AuthServcie from "../service/authService";
 import Nav from "./Nav";
 
 interface Props {
   loginState: boolean;
+  authService: AuthServcie;
 }
 
-const AppRoutes: React.FC<Props> = ({ loginState }) => {
+const AppRoutes: React.FC<Props> = ({ loginState, authService }) => {
   return (
     <>
       <BrowserRouter>
@@ -17,7 +19,7 @@ const AppRoutes: React.FC<Props> = ({ loginState }) => {
         {!loginState ? (
           <Switch>
             <Route exact path="/">
-              <Login></Login>
+              <Login authService={authService}></Login>
             </Route>
           </Switch>
         ) : (
@@ -26,7 +28,7 @@ const AppRoutes: React.FC<Props> = ({ loginState }) => {
               <Home></Home>
             </Route>
             <Route exact path="/profile">
-              <Profile></Profile>
+              <Profile authService={authService}></Profile>
             </Route>
           </Switch>
         )}
