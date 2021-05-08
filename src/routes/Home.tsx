@@ -1,8 +1,20 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { firebaseStore } from "../service/firebaseSet";
+
+type FirebaseQuery<
+  Data
+> = firebase.default.firestore.QueryDocumentSnapshot<Data>;
+
+type FirebaseDocumentData = firebase.default.firestore.DocumentData;
+
+type Arrays = string[];
 
 const Home: React.FC = () => {
   const [message, setMessage] = useState<string>("");
+  const [newMessage, setNewMessage] = useState<Arrays | FirebaseDocumentData>(
+    []
+  );
+
   const formRef = useRef<HTMLFormElement>(null);
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
@@ -23,6 +35,17 @@ const Home: React.FC = () => {
     } = event;
     setMessage(value);
   };
+
+  const getMessage = async () => {
+    const getData = await firebaseStore.collection("user").get();
+    getData.forEach((document: FirebaseQuery<FirebaseDocumentData>) =>
+      setNewMessage((prev: Arrays) => [...prev, document.data()])
+    );
+  };
+
+  useEffect(() => {
+    getMessage();
+  }, []);
 
   return (
     <>
