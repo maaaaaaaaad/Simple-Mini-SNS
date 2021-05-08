@@ -2,19 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import View from "../components/View";
 import { firebaseStore } from "../service/firebaseSet";
 
-type FirebaseQuery<
-  Data
-> = firebase.default.firestore.QueryDocumentSnapshot<Data>;
-
-type FirebaseDocumentData = firebase.default.firestore.DocumentData;
-
-type Arrays = string[];
+type Arrays = Array<Snap>;
+type Snap = {
+  [key: string]: string;
+};
 
 const Home: React.FC = () => {
-  const [message, setMessage] = useState<string>("");
-  const [newMessage, setNewMessage] = useState<Arrays | FirebaseDocumentData>(
-    []
-  );
+  const [message, setMessage] = useState<string>();
+  const [newMessage, setNewMessage] = useState<Arrays>();
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -36,26 +31,23 @@ const Home: React.FC = () => {
     setMessage(value);
   };
 
-  const getMessage = async () => {
-    const getData = await firebaseStore.collection("user").get();
-    getData.forEach((document: FirebaseQuery<FirebaseDocumentData>) => {
-      const mesDummy = {
-        ...document.data(),
-        id: document.id,
-      };
-      setNewMessage((prev: Arrays) => [...prev, mesDummy]);
-    });
-  };
-
   useEffect(() => {
-    getMessage();
+    firebaseStore
+      .collection("user")
+      .orderBy("createAt", "asc")
+      .onSnapshot((snapshot) => {
+        const snapArray = snapshot.docs.map((item) => ({
+          id: item.id,
+          ...item.data(),
+        }));
+        setNewMessage(snapArray);
+      });
   }, []);
 
   return (
     <>
       <form ref={formRef} onSubmit={onSubmit}>
         <input
-          value={message}
           onChange={onChange}
           type="text"
           placeholder="Please you enter message"
@@ -64,7 +56,7 @@ const Home: React.FC = () => {
         <input type="submit" value="Upload" />
       </form>
       <ul>
-        {newMessage.map((item: any) => (
+        {newMessage?.map((item) => (
           <View key={item.id} message={item.text}></View>
         ))}
       </ul>
