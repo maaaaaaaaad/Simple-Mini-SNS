@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import View from "../components/View";
 import { firebaseStore } from "../service/firebaseSet";
 
 type FirebaseQuery<
@@ -24,7 +25,6 @@ const Home: React.FC = () => {
       createAt: Date.now(),
     });
     formRef.current!.reset();
-    setMessage("");
   };
 
   const onChange: React.ChangeEventHandler<HTMLElement> = (
@@ -38,9 +38,13 @@ const Home: React.FC = () => {
 
   const getMessage = async () => {
     const getData = await firebaseStore.collection("user").get();
-    getData.forEach((document: FirebaseQuery<FirebaseDocumentData>) =>
-      setNewMessage((prev: Arrays) => [...prev, document.data()])
-    );
+    getData.forEach((document: FirebaseQuery<FirebaseDocumentData>) => {
+      const mesDummy = {
+        ...document.data(),
+        id: document.id,
+      };
+      setNewMessage((prev: Arrays) => [...prev, mesDummy]);
+    });
   };
 
   useEffect(() => {
@@ -59,6 +63,11 @@ const Home: React.FC = () => {
         />
         <input type="submit" value="Upload" />
       </form>
+      <ul>
+        {newMessage.map((item: any) => (
+          <View key={item.id} message={item.text}></View>
+        ))}
+      </ul>
     </>
   );
 };
