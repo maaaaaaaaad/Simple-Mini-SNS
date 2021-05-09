@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { FirebaseUser } from "../App";
 import Home from "../routes/Home";
 import Login from "../routes/Login";
 import Profile from "../routes/Profile";
@@ -9,9 +10,10 @@ import Nav from "./Nav";
 interface Props {
   loginState: boolean;
   authService: AuthServcie;
+  userData: FirebaseUser | undefined;
 }
 
-const AppRoutes: React.FC<Props> = ({ loginState, authService }) => {
+const AppRoutes: React.FC<Props> = ({ loginState, authService, userData }) => {
   return (
     <>
       <BrowserRouter>
@@ -25,7 +27,7 @@ const AppRoutes: React.FC<Props> = ({ loginState, authService }) => {
         ) : (
           <Switch>
             <Route exact path="/">
-              <Home></Home>
+              <Home userData={userData}></Home>
             </Route>
             <Route exact path="/profile">
               <Profile authService={authService}></Profile>

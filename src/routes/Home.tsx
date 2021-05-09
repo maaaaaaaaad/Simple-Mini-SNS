@@ -1,13 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
+import { FirebaseUser } from "../App";
 import View from "../components/View";
 import { firebaseStore } from "../service/firebaseSet";
 
+interface Props {
+  userData: FirebaseUser | undefined;
+}
+
 type Arrays = Array<Snap>;
-type Snap = {
+export type Snap = {
   [key: string]: string;
 };
 
-const Home: React.FC = () => {
+const Home: React.FC<Props> = ({ userData }) => {
   const [message, setMessage] = useState<string>();
   const [newMessage, setNewMessage] = useState<Arrays>();
 
@@ -18,6 +23,7 @@ const Home: React.FC = () => {
     await firebaseStore.collection("user").add({
       text: message,
       createAt: Date.now(),
+      createId: userData!.uid,
     });
     formRef.current!.reset();
   };
@@ -57,7 +63,12 @@ const Home: React.FC = () => {
       </form>
       <ul>
         {newMessage?.map((item) => (
-          <View key={item.id} message={item.text}></View>
+          <View
+            key={item.id}
+            docData={item}
+            message={item.text}
+            isOwner={item.createId === userData!.uid}
+          ></View>
         ))}
       </ul>
     </>

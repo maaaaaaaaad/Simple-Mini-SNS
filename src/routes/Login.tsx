@@ -31,14 +31,12 @@ const Login: React.FC<Props> = ({ authService }) => {
     try {
       if (newAccount) {
         // Create Account
-        const createData = await authService.createAccount(email, password);
-        await console.log(createData);
+        await authService.createAccount(email, password);
       } else {
         // Login
         setSpanner(true);
-        const loginData = await authService.signInWithAccount(email, password);
+        await authService.signInWithAccount(email, password);
         setSpanner(false);
-        await console.log(loginData);
       }
     } catch (error) {
       setError(error.message);
