@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FirebaseUser } from "../App";
 import View from "../components/View";
-import { firebaseStore } from "../service/firebaseSet";
+import { firebaseStore, storage } from "../service/firebaseSet";
 
 interface Props {
   userData: FirebaseUser | undefined;
@@ -15,27 +15,9 @@ export type Snap = {
 const Home: React.FC<Props> = ({ userData }) => {
   const [message, setMessage] = useState<string>();
   const [newMessage, setNewMessage] = useState<Arrays>();
+  const [imageFile, setImageFile] = useState<string>("");
 
   const formRef = useRef<HTMLFormElement>(null);
-
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
-    event.preventDefault();
-    await firebaseStore.collection("user").add({
-      text: message,
-      createAt: Date.now(),
-      createId: userData!.uid,
-    });
-    formRef.current!.reset();
-  };
-
-  const onChange: React.ChangeEventHandler<HTMLElement> = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    const {
-      target: { value },
-    } = event;
-    setMessage(value);
-  };
 
   useEffect(() => {
     firebaseStore
@@ -50,6 +32,58 @@ const Home: React.FC<Props> = ({ userData }) => {
       });
   }, []);
 
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    let imageUrl: string = "";
+
+    if (imageFile !== "") {
+      const fileSet = storage.ref().child(`${userData?.uid}/${Date.now()}`);
+      const res = await fileSet.putString(imageFile!, "data_url");
+      imageUrl = await res.ref.getDownloadURL();
+    }
+
+    const uploadData = {
+      text: message,
+      createAt: Date.now(),
+      createId: userData!.uid,
+      imageUrl,
+    };
+
+    await firebaseStore.collection("user").add(uploadData);
+    setImageFile("");
+    formRef.current!.reset();
+  };
+
+  const onChange: React.ChangeEventHandler<HTMLElement> = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const {
+      target: { value },
+    } = event;
+    setMessage(value);
+  };
+
+  const onFileChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const {
+      target: { files },
+    } = event;
+    const selecteFile = files![0];
+    const fileReader = new FileReader();
+    fileReader.onloadend = (event: ProgressEvent<FileReader>) => {
+      const target = event.currentTarget as FileReader;
+      const result = target.result as string;
+      setImageFile(result);
+    };
+    fileReader.readAsDataURL(selecteFile);
+  };
+
+  const imgCancel = () => {
+    const checking: boolean = window.confirm("Do you cancel this photo?");
+    if (checking) {
+      setImageFile("");
+    }
+  };
+
   return (
     <>
       <form ref={formRef} onSubmit={onSubmit}>
@@ -59,8 +93,15 @@ const Home: React.FC<Props> = ({ userData }) => {
           placeholder="Please you enter message"
           maxLength={300}
         />
+        <input type="file" accept="image/*" onChange={onFileChange} />
         <input type="submit" value="Upload" />
       </form>
+      {imageFile && (
+        <form>
+          <img src={imageFile} alt="selectedImg" width="100px" height="100px" />
+          <button onClick={imgCancel}>Cancel</button>
+        </form>
+      )}
       <ul>
         {newMessage?.map((item) => (
           <View
@@ -68,6 +109,7 @@ const Home: React.FC<Props> = ({ userData }) => {
             docData={item}
             message={item.text}
             isOwner={item.createId === userData!.uid}
+            imageFile={item.imageURL}
           ></View>
         ))}
       </ul>
