@@ -1,6 +1,10 @@
 import { firebaseApp, githubProvider, googleProvider } from "./firebaseSet";
 
 class AuthServcie {
+  currentUser(): firebase.default.User {
+    return firebaseApp.auth().currentUser!;
+  }
+
   diffLogin(
     providerName: string
   ): Promise<firebase.default.auth.UserCredential> {

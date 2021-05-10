@@ -11,13 +11,19 @@ interface Props {
   loginState: boolean;
   authService: AuthServcie;
   userData: FirebaseUser | undefined;
+  refreshUser: () => void;
 }
 
-const AppRoutes: React.FC<Props> = ({ loginState, authService, userData }) => {
+const AppRoutes: React.FC<Props> = ({
+  loginState,
+  authService,
+  userData,
+  refreshUser,
+}) => {
   return (
     <>
       <BrowserRouter>
-        {loginState && <Nav></Nav>}
+        {loginState && <Nav userData={userData}></Nav>}
         {!loginState ? (
           <Switch>
             <Route exact path="/">
@@ -30,7 +36,11 @@ const AppRoutes: React.FC<Props> = ({ loginState, authService, userData }) => {
               <Home userData={userData}></Home>
             </Route>
             <Route exact path="/profile">
-              <Profile authService={authService}></Profile>
+              <Profile
+                authService={authService}
+                userData={userData}
+                refreshUser={refreshUser}
+              ></Profile>
             </Route>
           </Switch>
         )}

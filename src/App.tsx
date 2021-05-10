@@ -23,6 +23,11 @@ const App: React.FC = () => {
     });
   });
 
+  const refreshUser = () => {
+    const user = authService.currentUser();
+    setUserData(Object.assign<{}, FirebaseUser>({}, user));
+  };
+
   return (
     <>
       {lodingSpanner ? (
@@ -31,6 +36,7 @@ const App: React.FC = () => {
             loginState={loginState}
             authService={authService}
             userData={userData}
+            refreshUser={refreshUser}
           ></AppRoutes>
           <footer className="app__footer">
             &copy; Project SNS {new Date().getFullYear()}
