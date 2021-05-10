@@ -1,6 +1,6 @@
 import React from "react";
 import { Snap } from "../routes/Home";
-import { firebaseStore } from "../service/firebaseSet";
+import { firebaseStore, storage } from "../service/firebaseSet";
 
 interface Props {
   docData: Snap;
@@ -13,6 +13,7 @@ const DelMessage: React.FC<Props> = ({ docData }) => {
 
     if (toggleSign) {
       await firebaseStore.collection("user").doc(`${docData.id}`).delete();
+      await storage.refFromURL(`${docData.imageUrl}`).delete();
     }
   };
 

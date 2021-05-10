@@ -109,7 +109,7 @@ const Home: React.FC<Props> = ({ userData }) => {
             docData={item}
             message={item.text}
             isOwner={item.createId === userData!.uid}
-            imageFile={item.imageURL}
+            imageFile={item.imageUrl}
           ></View>
         ))}
       </ul>
