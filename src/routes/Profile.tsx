@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useHistory } from "react-router";
 import { FirebaseUser } from "../App";
-import ProfileImageEditor from "../components/ProfileImageEditor";
 import AuthServcie from "../service/authService";
 import { firebaseStore } from "../service/firebaseSet";
 
@@ -16,8 +15,6 @@ const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
   const [newDisplayName, setNewDisplayName] = useState<string>(
     userData!.displayName!
   );
-
-  const [onEditToggle, setOnEditToggle] = useState<boolean>(false);
 
   const history = useHistory();
 
@@ -55,29 +52,17 @@ const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
     refreshUser();
   };
 
-  const onEditProfile: React.MouseEventHandler<HTMLButtonElement> = () => {
-    setOnEditToggle((prev) => !prev);
-  };
-
   return (
     <>
-      <button onClick={onEditProfile}>
-        {!onEditToggle ? "Edit Profile" : "Close"}
-      </button>
-      {onEditToggle && (
-        <>
-          <form onSubmit={onSubmit}>
-            <input
-              type="text"
-              placeholder="Display name"
-              onChange={onChange}
-              value={newDisplayName}
-            />
-            <input type="submit" value="Update" />
-          </form>
-          <ProfileImageEditor userData={userData}></ProfileImageEditor>
-        </>
-      )}
+      <form onSubmit={onSubmit}>
+        <input
+          type="text"
+          placeholder="Display name"
+          onChange={onChange}
+          value={newDisplayName}
+        />
+        <input type="submit" value="Update" />
+      </form>
 
       <button onClick={onLogout}>Log out</button>
     </>
