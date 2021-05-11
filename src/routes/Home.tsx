@@ -77,7 +77,7 @@ const Home: React.FC<Props> = ({ userData }) => {
     fileReader.readAsDataURL(selecteFile);
   };
 
-  const imgCancel = () => {
+  const imgCancel: React.MouseEventHandler<HTMLButtonElement> = () => {
     const checking: boolean = window.confirm("Do you cancel this photo?");
     if (checking) {
       setImageFile("");
