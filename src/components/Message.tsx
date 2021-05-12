@@ -90,7 +90,7 @@ const Message: React.FC<Props> = ({ userData }) => {
             className="message__input_message"
             onChange={onChange}
             type="text"
-            placeholder="Please you enter message"
+            placeholder="message"
             maxLength={300}
           />
           <FontAwesomeIcon
