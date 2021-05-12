@@ -1,5 +1,10 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import AuthServcie from "../service/authService";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fab } from "@fortawesome/free-brands-svg-icons";
+
+library.add(fab);
 
 interface Props {
   authService: AuthServcie;
@@ -83,17 +88,19 @@ const Login: React.FC<Props> = ({ authService }) => {
               className="form__submit"
               name="submit"
               type="submit"
-              value={newAccount ? "Create Account" : "SIGN IN"}
+              value={!newAccount ? "Create Account" : "SIGN IN"}
             />
             <span onClick={toggleAccount} className="form__toggle">
-              {newAccount ? "SIGN IN" : "Create Account"}
+              {!newAccount ? "SIGN IN" : "Create Account"}
             </span>
           </form>
           <div className="btn">
             <button onClick={signIn} className="btn__google">
+              <FontAwesomeIcon icon={["fab", "google"]}></FontAwesomeIcon>
               Continue Google
             </button>
             <button onClick={signIn} className="btn__github">
+              <FontAwesomeIcon icon={["fab", "github"]}></FontAwesomeIcon>
               Continue Github
             </button>
           </div>

@@ -1,0 +1,30 @@
+.message__input__box {
+  display: flex;
+  justify-content: space-between;
+  width: 30vw;
+  height: 3vh;
+  border: none;
+  background-color: rgb(20, 19, 19);
+  border-bottom: 1px solid rgb(228, 221, 221);
+}
+
+.message__input_message {
+  text-align: center;
+  width: 100%;
+  border: none;
+  outline: none;
+  background-color: rgb(20, 19, 19);
+}
+
+.message__input__file {
+  margin-top: 20px;
+}
+
+.message__input__image,
+.message__input__submit {
+  display: none;
+}
+
+.message__icon__arrow {
+  margin-left: 10px;
+}

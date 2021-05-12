@@ -1,0 +1,8 @@
+.Nav__ul {
+  display: flex;
+  margin-bottom: 50px;
+}
+
+.Nav__li {
+  margin-right: 10px;
+}

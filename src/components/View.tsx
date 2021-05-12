@@ -1,6 +1,5 @@
 import React from "react";
 import { Snap } from "../routes/Home";
-
 import DelMessage from "./DelMessage";
 import EditMessage from "./EditMessage";
 

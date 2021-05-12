@@ -1,3 +1,5 @@
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Snap } from "../routes/Home";
 import { firebaseStore } from "../service/firebaseSet";
@@ -50,9 +52,9 @@ const EditMessage: React.FC<Props> = ({ message, docData }) => {
           </button>
         </>
       ) : (
-        <button onClick={onToggleHandler} className="edit__button">
-          Edit
-        </button>
+        <span onClick={onToggleHandler} className="edit__button">
+          <FontAwesomeIcon icon={faEdit} color="white"></FontAwesomeIcon>
+        </span>
       )}
     </>
   );

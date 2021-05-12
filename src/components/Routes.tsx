@@ -1,15 +1,14 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { FirebaseUser } from "../App";
+import { AuthProps, FirebaseUser } from "../App";
 import Home from "../routes/Home";
 import Login from "../routes/Login";
 import Profile from "../routes/Profile";
-import AuthServcie from "../service/authService";
+
 import Nav from "./Nav";
 
-interface Props {
+interface Props extends AuthProps {
   loginState: boolean;
-  authService: AuthServcie;
   userData: FirebaseUser | undefined;
   refreshUser: () => void;
 }
