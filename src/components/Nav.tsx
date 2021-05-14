@@ -1,4 +1,4 @@
-import { faHome, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faUserEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -15,12 +15,12 @@ const Nav: React.FC<Props> = ({ userData }) => {
       <ul className="Nav__ul">
         <li className="Nav__li">
           <Link to="/">
-            <FontAwesomeIcon icon={faHome} size={"3x"}></FontAwesomeIcon>
+            <FontAwesomeIcon icon={faHome} size={"2x"}></FontAwesomeIcon>
           </Link>
         </li>
         <li className="Nav__li">
           <Link to="/profile">
-            <FontAwesomeIcon icon={faUser} size={"3x"}></FontAwesomeIcon>
+            <FontAwesomeIcon icon={faUserEdit} size={"2x"}></FontAwesomeIcon>
           </Link>
         </li>
       </ul>

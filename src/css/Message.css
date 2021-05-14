@@ -28,3 +28,8 @@
 .message__icon__arrow {
   margin-left: 10px;
 }
+
+.message__icon__image,
+.message__icon__arrow {
+  cursor: pointer;
+}

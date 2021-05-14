@@ -3,7 +3,11 @@ import AppRoutes from "./components/Routes";
 import AuthServcie from "./service/authService";
 import "./css/App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCopyright, faDog } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCopyright,
+  faDog,
+  faUserCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 export interface AuthProps {
   authService: AuthServcie;
@@ -45,6 +49,9 @@ const App: React.FC<AuthProps> = ({ authService }) => {
       </header>
 
       <section className="app__body">
+        <div className="app__image__preview">
+          <FontAwesomeIcon icon={faUserCircle} size={"6x"}></FontAwesomeIcon>
+        </div>
         {lodingSpanner ? (
           <div className="app__routes">
             <AppRoutes

@@ -94,15 +94,16 @@ const Message: React.FC<Props> = ({ userData }) => {
             maxLength={300}
           />
           <FontAwesomeIcon
+            className="message__icon__image"
             onClick={onFileClick}
             icon={faImage}
-            size={"2x"}
+            size={"lg"}
           ></FontAwesomeIcon>
           <FontAwesomeIcon
             className="message__icon__arrow"
             onClick={onSubmitClick}
             icon={faArrowRight}
-            size={"2x"}
+            size={"lg"}
           ></FontAwesomeIcon>
         </div>
         <div className="message__input__file">
