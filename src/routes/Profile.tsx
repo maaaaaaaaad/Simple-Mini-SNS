@@ -2,10 +2,14 @@ import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useHistory } from "react-router";
 import { AuthProps, FirebaseUser } from "../App";
-import { firebaseStore } from "../service/firebaseSet";
+import { firebaseStore, storage } from "../service/firebaseSet";
 import "../css/Profile.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faUndo } from "@fortawesome/free-solid-svg-icons";
+import {
+  faImage,
+  faSignOutAlt,
+  faUndo,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface Props extends AuthProps {
   userData: FirebaseUser | undefined;
@@ -16,8 +20,10 @@ const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
   const [newDisplayName, setNewDisplayName] = useState<string>(
     userData!.displayName!
   );
-  const submitRef = useRef<HTMLInputElement>(null);
+  const [selectedProfileImg, setSelectedProfileImg] = useState<string>("");
 
+  const profileImg = useRef<HTMLInputElement>(null);
+  const submitRef = useRef<HTMLInputElement>(null);
   const history = useHistory();
 
   const onLogout = async () => {
@@ -51,7 +57,14 @@ const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-    if (userData!.displayName !== newDisplayName) {
+    if (userData!.displayName || selectedProfileImg) {
+      const reference = storage
+        .ref()
+        .child(`Profile_img_${userData!.uid}/seletedImage`);
+      const pushed = await reference.putString(selectedProfileImg!, "data_url");
+      const profileImgUrl = await reference.getDownloadURL();
+      console.log(profileImgUrl);
+
       await userData!.updateProfile({
         displayName: newDisplayName,
       });
@@ -62,6 +75,26 @@ const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
   const onSubmitClick: React.MouseEventHandler<SVGSVGElement> = (event) => {
     event.preventDefault();
     submitRef.current!.click();
+  };
+
+  const onProfileImgChange: React.ChangeEventHandler<HTMLInputElement> = (
+    event
+  ) => {
+    const {
+      target: { files },
+    } = event;
+    const selectedFile = files![0];
+    const fileReader = new FileReader();
+    fileReader.onloadend = (event: ProgressEvent<FileReader>) => {
+      const target = event.currentTarget as FileReader;
+      const result = target.result as string;
+      setSelectedProfileImg(result);
+    };
+    fileReader.readAsDataURL(selectedFile);
+  };
+
+  const onImgClick: React.MouseEventHandler<SVGSVGElement> = () => {
+    profileImg.current!.click();
   };
 
   return (
@@ -76,7 +109,21 @@ const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
             maxLength={15}
             value={newDisplayName}
           />
+          <input
+            className="profile__userImg"
+            ref={profileImg}
+            type="file"
+            accept="image/*"
+            onChange={onProfileImgChange}
+          />
           <FontAwesomeIcon
+            className="profile__icon img"
+            icon={faImage}
+            size={"1x"}
+            onClick={onImgClick}
+          ></FontAwesomeIcon>
+          <FontAwesomeIcon
+            className="profile__icon return"
             onClick={onSubmitClick}
             icon={faUndo}
             size={"1x"}

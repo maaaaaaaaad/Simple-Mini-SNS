@@ -22,3 +22,12 @@
 .profile__input__icon__signout {
   margin-top: 10px;
 }
+
+.profile__userImg {
+  display: none;
+}
+
+.profile__icon {
+  margin-right: 5px;
+  cursor: pointer;
+}

@@ -44,7 +44,7 @@ const App: React.FC<AuthProps> = ({ authService }) => {
           className="app__header__icon"
           icon={faDog}
           color="white"
-          size={"5x"}
+          size={"4x"}
         ></FontAwesomeIcon>
       </header>
 
