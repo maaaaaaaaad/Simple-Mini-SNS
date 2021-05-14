@@ -8,6 +8,7 @@ import {
   faDog,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import { storage } from "./service/firebaseSet";
 
 export interface AuthProps {
   authService: AuthServcie;
@@ -19,6 +20,7 @@ const App: React.FC<AuthProps> = ({ authService }) => {
   const [lodingSpanner, setSpanner] = useState<boolean>(false);
   const [loginState, setLoginState] = useState<boolean>(false);
   const [userData, setUserData] = useState<FirebaseUser>();
+  const [profileImage, setProfileImage] = useState<string>("");
 
   useEffect(() => {
     authService.onStateChanged((user: FirebaseUser) => {
@@ -32,9 +34,26 @@ const App: React.FC<AuthProps> = ({ authService }) => {
     });
   });
 
+  const getImgDB = async () => {
+    const getImgDB: string = await storage
+      .ref()
+      .child(`Profile_img_${userData?.uid}/seletedImage`)
+      .getDownloadURL();
+
+    setProfileImage(getImgDB);
+  };
+
+  useEffect(() => {
+    userData && getImgDB();
+  });
+
   const refreshUser = () => {
     const user = authService.currentUser();
     setUserData(Object.assign<{}, FirebaseUser>({}, user));
+  };
+
+  const showProfileImg = (profileImg: string) => {
+    setProfileImage(profileImg);
   };
 
   return (
@@ -49,12 +68,26 @@ const App: React.FC<AuthProps> = ({ authService }) => {
       </header>
 
       <section className="app__body">
-        <div className="app__image__preview">
-          <FontAwesomeIcon icon={faUserCircle} size={"6x"}></FontAwesomeIcon>
-        </div>
+        {profileImage ? (
+          <div>
+            <img
+              className="app__profile__image"
+              src={profileImage}
+              alt="profileImg"
+              width={150}
+              height={150}
+            />
+          </div>
+        ) : (
+          <div className="app__profile__preview">
+            <FontAwesomeIcon icon={faUserCircle} size={"6x"}></FontAwesomeIcon>
+          </div>
+        )}
+
         {lodingSpanner ? (
           <div className="app__routes">
             <AppRoutes
+              showProfileImg={showProfileImg}
               loginState={loginState}
               authService={authService}
               userData={userData}

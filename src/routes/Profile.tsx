@@ -6,25 +6,38 @@ import { firebaseStore, storage } from "../service/firebaseSet";
 import "../css/Profile.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArrowCircleRight,
   faImage,
   faSignOutAlt,
   faUndo,
+  faWindowClose,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface Props extends AuthProps {
   userData: FirebaseUser | undefined;
   refreshUser: () => void;
+  getProfileImg: (profileImg: string) => void;
 }
 
-const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
+const Profile: React.FC<Props> = ({
+  authService,
+  userData,
+  refreshUser,
+  getProfileImg,
+}) => {
   const [newDisplayName, setNewDisplayName] = useState<string>(
     userData!.displayName!
   );
   const [selectedProfileImg, setSelectedProfileImg] = useState<string>("");
+  const [resultImg, setResultImg] = useState<string>("");
 
   const profileImg = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLInputElement>(null);
   const history = useHistory();
+
+  useEffect(() => {
+    resultImg && getProfileImg(resultImg);
+  }, [getProfileImg, resultImg]);
 
   const onLogout = async () => {
     const warningMessage: string = "Are you sure sign out?";
@@ -57,13 +70,13 @@ const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-    if (userData!.displayName || selectedProfileImg) {
+    if (userData!.displayName && selectedProfileImg) {
       const reference = storage
         .ref()
         .child(`Profile_img_${userData!.uid}/seletedImage`);
       const pushed = await reference.putString(selectedProfileImg!, "data_url");
-      const profileImgUrl = await reference.getDownloadURL();
-      console.log(profileImgUrl);
+      const profileImgUrl: string = await pushed.ref.getDownloadURL();
+      setResultImg(profileImgUrl);
 
       await userData!.updateProfile({
         displayName: newDisplayName,
@@ -76,6 +89,8 @@ const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
     event.preventDefault();
     submitRef.current!.click();
   };
+
+  const onUpdateImg: React.MouseEventHandler<SVGSVGElement> = () => {};
 
   const onProfileImgChange: React.ChangeEventHandler<HTMLInputElement> = (
     event
@@ -95,6 +110,10 @@ const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
 
   const onImgClick: React.MouseEventHandler<SVGSVGElement> = () => {
     profileImg.current!.click();
+  };
+
+  const imageCancel: React.MouseEventHandler<SVGSVGElement> = () => {
+    setSelectedProfileImg("");
   };
 
   return (
@@ -129,7 +148,27 @@ const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
             size={"1x"}
           ></FontAwesomeIcon>
         </div>
-
+        {selectedProfileImg && (
+          <div className="profile__image__preview">
+            <img
+              className="profile__image__seletedImg"
+              src={selectedProfileImg}
+              alt="seletedImg"
+              width={100}
+              height={100}
+            />
+            <FontAwesomeIcon
+              className="profile__icon close"
+              icon={faWindowClose}
+              onClick={imageCancel}
+            ></FontAwesomeIcon>
+            <FontAwesomeIcon
+              onClick={onUpdateImg}
+              className="profile__icon arrow"
+              icon={faArrowCircleRight}
+            ></FontAwesomeIcon>
+          </div>
+        )}
         <div>
           <input
             ref={submitRef}
@@ -141,13 +180,13 @@ const Profile: React.FC<Props> = ({ authService, userData, refreshUser }) => {
       </form>
       <div className="profile__user__box">
         <div className="profile__user__name">
-          Currently User: {userData!.displayName}
+          Currently Name: {userData!.displayName}
         </div>
         <span onClick={onLogout}>
           <FontAwesomeIcon
-            className="profile__input__icon__signout"
+            className="profile__icon signout"
             icon={faSignOutAlt}
-            size={"2x"}
+            size={"1x"}
           ></FontAwesomeIcon>
         </span>
       </div>

@@ -11,6 +11,7 @@ interface Props extends AuthProps {
   loginState: boolean;
   userData: FirebaseUser | undefined;
   refreshUser: () => void;
+  showProfileImg: (profileImg: string) => void;
 }
 
 const AppRoutes: React.FC<Props> = ({
@@ -18,7 +19,12 @@ const AppRoutes: React.FC<Props> = ({
   authService,
   userData,
   refreshUser,
+  showProfileImg,
 }) => {
+  const getProfileImg = (profileImg: string) => {
+    showProfileImg(profileImg);
+  };
+
   return (
     <>
       <BrowserRouter>
@@ -36,6 +42,7 @@ const AppRoutes: React.FC<Props> = ({
             </Route>
             <Route exact path="/profile">
               <Profile
+                getProfileImg={getProfileImg}
                 authService={authService}
                 userData={userData}
                 refreshUser={refreshUser}
