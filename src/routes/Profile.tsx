@@ -70,14 +70,7 @@ const Profile: React.FC<Props> = ({
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-    if (userData!.displayName && selectedProfileImg) {
-      const reference = storage
-        .ref()
-        .child(`Profile_img_${userData!.uid}/seletedImage`);
-      const pushed = await reference.putString(selectedProfileImg!, "data_url");
-      const profileImgUrl: string = await pushed.ref.getDownloadURL();
-      setResultImg(profileImgUrl);
-
+    if (userData!.displayName !== userData!.uid) {
       await userData!.updateProfile({
         displayName: newDisplayName,
       });
@@ -90,7 +83,18 @@ const Profile: React.FC<Props> = ({
     submitRef.current!.click();
   };
 
-  const onUpdateImg: React.MouseEventHandler<SVGSVGElement> = () => {};
+  const onUpdateImg: React.MouseEventHandler<SVGSVGElement> = async () => {
+    const ok = window.confirm(`Do you upload this profile image?`);
+    if (ok) {
+      const reference = storage
+        .ref()
+        .child(`Profile_img_${userData!.uid}/seletedImage`);
+      const pushed = await reference.putString(selectedProfileImg!, "data_url");
+      const profileImgUrl: string = await pushed.ref.getDownloadURL();
+      setSelectedProfileImg("");
+      setResultImg(profileImgUrl);
+    }
+  };
 
   const onProfileImgChange: React.ChangeEventHandler<HTMLInputElement> = (
     event

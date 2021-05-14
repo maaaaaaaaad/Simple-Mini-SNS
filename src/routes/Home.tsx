@@ -7,6 +7,7 @@ import "../css/Home.css";
 
 interface Props {
   userData: FirebaseUser | undefined;
+  profileImage: string;
 }
 
 type Arrays = Array<Snap>;
@@ -14,7 +15,7 @@ export type Snap = {
   [key: string]: string;
 };
 
-const Home: React.FC<Props> = ({ userData }) => {
+const Home: React.FC<Props> = ({ userData, profileImage }) => {
   const [newMessage, setNewMessage] = useState<Arrays>();
 
   useEffect(() => {
@@ -41,6 +42,7 @@ const Home: React.FC<Props> = ({ userData }) => {
             message={item.text}
             isOwner={item.createId === userData!.uid}
             imageFile={item.imageUrl}
+            profileImage={profileImage}
           ></View>
         ))}
       </ul>

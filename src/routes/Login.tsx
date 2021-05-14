@@ -88,10 +88,10 @@ const Login: React.FC<Props> = ({ authService }) => {
               className="form__submit"
               name="submit"
               type="submit"
-              value={!newAccount ? "Create Account" : "SIGN IN"}
+              value={newAccount ? "Create Account" : "SIGN IN"}
             />
             <span onClick={toggleAccount} className="form__toggle">
-              {!newAccount ? "SIGN IN" : "Create Account"}
+              {newAccount ? "SIGN IN" : "Create Account"}
             </span>
           </form>
           <div className="btn">
