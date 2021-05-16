@@ -92,7 +92,6 @@ const App: React.FC<AuthProps> = ({ authService }) => {
               authService={authService}
               userData={userData}
               refreshUser={refreshUser}
-              profileImage={profileImage}
             ></AppRoutes>
           </div>
         ) : (

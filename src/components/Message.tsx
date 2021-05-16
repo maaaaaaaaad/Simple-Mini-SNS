@@ -4,7 +4,7 @@ import {
   faWindowClose,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FirebaseUser } from "../App";
 import { firebaseStore, storage } from "../service/firebaseSet";
 import "../css/Message.css";
@@ -19,6 +19,19 @@ const Message: React.FC<Props> = ({ userData }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLInputElement>(null);
+  const [userImage, setUserImage] = useState<string>("");
+
+  const getUserImage = async () => {
+    const userDocImg = await storage
+      .ref()
+      .child(`Profile_img_${userData?.uid}/seletedImage`)
+      .getDownloadURL();
+    setUserImage(userDocImg);
+  };
+
+  useEffect(() => {
+    getUserImage();
+  });
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -35,6 +48,7 @@ const Message: React.FC<Props> = ({ userData }) => {
       createAt: Date.now(),
       createId: userData!.uid,
       imageUrl,
+      userImage,
     };
 
     await firebaseStore.collection("user").add(uploadData);

@@ -9,7 +9,7 @@ interface Props {
   isOwner: boolean;
   docData: Snap;
   imageFile: string;
-  profileImage: string;
+  userProfileImg: string;
 }
 
 const View: React.FC<Props> = ({
@@ -17,17 +17,17 @@ const View: React.FC<Props> = ({
   isOwner,
   docData,
   imageFile,
-  profileImage,
+  userProfileImg,
 }) => {
   return (
     <li className="view">
       <div className="view__section">
         {isOwner && (
           <>
-            {profileImage && (
+            {userProfileImg && (
               <img
                 className="view__userImg"
-                src={profileImage}
+                src={userProfileImg}
                 alt=""
                 width={50}
                 height={50}

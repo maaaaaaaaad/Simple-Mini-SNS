@@ -7,7 +7,6 @@ import "../css/Home.css";
 
 interface Props {
   userData: FirebaseUser | undefined;
-  profileImage: string;
 }
 
 type Arrays = Array<Snap>;
@@ -15,14 +14,17 @@ export type Snap = {
   [key: string]: string;
 };
 
-const Home: React.FC<Props> = ({ userData, profileImage }) => {
+type FirebaseSnapshot =
+  firebase.default.firestore.QuerySnapshot<firebase.default.firestore.DocumentData>;
+
+const Home: React.FC<Props> = ({ userData }) => {
   const [newMessage, setNewMessage] = useState<Arrays>();
 
   useEffect(() => {
     firebaseStore
       .collection("user")
       .orderBy("createAt", "asc")
-      .onSnapshot((snapshot) => {
+      .onSnapshot((snapshot: FirebaseSnapshot) => {
         const snapArray = snapshot.docs.map((item) => ({
           id: item.id,
           ...item.data(),
@@ -34,7 +36,7 @@ const Home: React.FC<Props> = ({ userData, profileImage }) => {
   return (
     <>
       <Message userData={userData}></Message>
-      <ul className="messageBuket">
+      <ul className="message">
         {newMessage?.map((item) => (
           <View
             key={item.id}
@@ -42,7 +44,7 @@ const Home: React.FC<Props> = ({ userData, profileImage }) => {
             message={item.text}
             isOwner={item.createId === userData!.uid}
             imageFile={item.imageUrl}
-            profileImage={profileImage}
+            userProfileImg={item.userImage}
           ></View>
         ))}
       </ul>
