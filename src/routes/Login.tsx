@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import AuthServcie from "../service/authService";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
+import "../css/Login.css";
 
 library.add(fab);
 
@@ -65,7 +66,7 @@ const Login: React.FC<Props> = ({ authService }) => {
     <>
       {!lodingSpanner ? (
         <>
-          <form onSubmit={onSubmit} className="form">
+          <form onSubmit={onSubmit} className="form__section">
             <input
               className="form__email"
               name="email"
